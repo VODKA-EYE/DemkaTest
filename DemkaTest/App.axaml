@@ -1,0 +1,86 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="DemkaTest.App"
+             RequestedThemeVariant="Default">
+             <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
+
+    <Application.Styles>
+		<FluentTheme>
+			<FluentTheme.Palettes>
+				<ColorPaletteResources
+					x:Key="Dark"
+					Accent="#ff498c51"
+					AltHigh="White"
+					AltLow="White"
+					AltMedium="White"
+					AltMediumHigh="White"
+					AltMediumLow="White"
+					BaseHigh="Black"
+					BaseLow="#ff76e383"
+					BaseMedium="#ff2f9f40"
+					BaseMediumHigh="#ff007113"
+					BaseMediumLow="#ff188829"
+					ChromeAltLow="#ff007113"
+					ChromeBlackHigh="Black"
+					ChromeBlackLow="#ff76e383"
+					ChromeBlackMedium="#ff007113"
+					ChromeBlackMediumLow="#ff2f9f40"
+					ChromeDisabledHigh="#ff76e383"
+					ChromeDisabledLow="#ff2f9f40"
+					ChromeGray="#ff188829"
+					ChromeHigh="#ff76e383"
+					ChromeLow="#ffc3f8ca"
+					ChromeMedium="#ffb4f4bc"
+					ChromeMediumLow="#ffc3f8ca"
+					ChromeWhite="White"
+					ListLow="#ffb4f4bc"
+					ListMedium="#ff76e383"
+					RegionColor="White" />
+				<ColorPaletteResources 
+					x:Key="Light" 
+					Accent="#ff498c51" 
+					AltHigh="White" 
+					AltLow="White" 
+					AltMedium="White" 
+					AltMediumHigh="White" 
+					AltMediumLow="White" 
+					BaseHigh="Black" 
+					BaseLow="#ff76e383" 
+					BaseMedium="#ff2f9f40" 
+					BaseMediumHigh="#ff007113" 
+					BaseMediumLow="#ff188829" 
+					ChromeAltLow="#ff007113" 
+					ChromeBlackHigh="Black" 
+					ChromeBlackLow="#ff76e383" 
+					ChromeBlackMedium="#ff007113" 
+					ChromeBlackMediumLow="#ff2f9f40" 
+					ChromeDisabledHigh="#ff76e383" 
+					ChromeDisabledLow="#ff2f9f40" 
+					ChromeGray="#ff188829" 
+					ChromeHigh="#ff76e383" 
+					ChromeLow="#ffc3f8ca" 
+					ChromeMedium="#ffb4f4bc" 
+					ChromeMediumLow="#ffc3f8ca" 
+					ChromeWhite="White" 
+					ListLow="#ffb4f4bc" 
+					ListMedium="#ff76e383" 
+					RegionColor="White" />
+			</FluentTheme.Palettes>
+		</FluentTheme>
+		<Style Selector="TextBlock">
+			<Setter Property="FontFamily" Value="Comic Sans MS"/>
+			<Setter Property="Foreground" Value="#ff2f9f40"/>
+			<Setter Property="FontSize" Value="24"/>
+		</Style>
+		<Style Selector="TextBox">
+			<Setter Property="FontFamily" Value="Comic Sans MS"/>
+			<Setter Property="Foreground" Value="#ff2f9f40"/>
+			<Setter Property="FontSize" Value="24"/>
+		</Style>
+		<Style Selector="ComboBox">
+			<Setter Property="FontFamily" Value="Comic Sans MS"/>
+			<Setter Property="Foreground" Value="#ff2f9f40"/>
+			<Setter Property="FontSize" Value="24"/>
+		</Style>
+    </Application.Styles>
+</Application>

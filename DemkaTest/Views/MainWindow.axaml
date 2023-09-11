@@ -1,0 +1,96 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:DemkaTest.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:views="clr-namespace:DemkaTest.Views"
+        mc:Ignorable="d" d:DesignWidth="480" d:DesignHeight="380"
+        x:Class="DemkaTest.Views.MainWindow"
+        Icon="/Assets/icon.ico"
+        Title="DemkaTest"
+		Width="600" Height="380"
+		MinWidth="480" MinHeight="380">
+	<Grid ColumnDefinitions="72,auto,*" RowDefinitions="72,auto">
+		<StackPanel
+			Grid.ColumnSpan="3"
+			Grid.Row="0"
+			Background="#ff76e383"/>
+		<Image
+			Grid.Row="0"
+			Grid.Column="0"
+			Source="../Resources/logo.png"/>
+		<TextBlock
+			Grid.Column="1"
+			Grid.Row="0"
+			VerticalAlignment="Center"
+			Text="ООО «Стройматериалы»"
+			/>
+		<StackPanel
+			Grid.Column="1"
+			Grid.Row="2">
+			<TextBlock
+				Text="Логин:"/>
+			<TextBox
+				Name="LoginTextBlock"
+				/>
+			<StackPanel Height="8"/>
+			<TextBlock
+				Text="Пароль:"/>
+			<TextBox
+				Name="PasswordTextBlock"
+				PasswordChar="*"/>
+			<StackPanel Height="8"/>
+			<Grid
+				ColumnDefinitions="auto,auto,auto,auto">
+				<TextBlock
+					Grid.Column="0"
+					Name="Captcha1"/>
+				<TextBlock
+					Grid.Column="1"
+					Name="Captcha2"/>
+				<TextBlock
+					Grid.Column="2"
+					Name="Captcha3"/>
+				<TextBlock
+					Grid.Column="3"
+					Name="Captcha4"/>
+				<TextBlock
+					Grid.ColumnSpan="4"
+					Name="CaptchaNoise"
+					Foreground="#ff76e383"/>
+			</Grid>
+			<StackPanel 
+				Orientation="Horizontal"
+				HorizontalAlignment="Right">
+				<TextBox
+					MaxWidth="132"
+					MinWidth="132"
+					Name="CaptchaTextBox"
+					Watermark="CAPTCHA"
+					MaxLength="7">
+				</TextBox>
+				<StackPanel Width="64"/>
+				<Button
+					Name="LoginButton"
+					Click="Login">
+					<TextBlock
+						Text="Войти"/>
+				</Button>
+			</StackPanel>
+			
+		</StackPanel>
+		<Button
+			Margin="2"
+			Grid.Column="2"
+			Grid.Row="1"
+			Width="112"
+			HorizontalAlignment="Right"
+			VerticalAlignment="Top"
+			Click="LoginAsGuest">
+			<TextBlock
+				Text="Войти как гость"
+				TextWrapping="Wrap"
+				FontSize="20"/>
+		</Button>
+	</Grid>
+</Window>

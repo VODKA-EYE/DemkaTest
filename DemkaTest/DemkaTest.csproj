@@ -1,0 +1,65 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+
+  
+  <ItemGroup>
+    <AvaloniaResource Include="Assets\**" />
+  </ItemGroup>
+
+  
+  <ItemGroup>
+    <None Remove="Resources\logo.png" />
+    <None Remove="Resources\picture.png" />
+    <None Remove="Resources\Products\2G3280.jpg" />
+    <None Remove="Resources\Products\3L7RCZ.jpg" />
+    <None Remove="Resources\Products\3XBOTN.jpeg" />
+    <None Remove="Resources\Products\BPV4MM.jpg" />
+    <None Remove="Resources\Products\F895RB.jpg" />
+    <None Remove="Resources\Products\JVL42J.jpg" />
+    <None Remove="Resources\Products\MIO8YV.jpg" />
+    <None Remove="Resources\Products\PMEZMH.jpg" />
+    <None Remove="Resources\Products\S72AM3.jpg" />
+    <None Remove="Resources\Products\UER2QD.jpg" />
+  </ItemGroup>
+
+  
+  <ItemGroup>
+    <AvaloniaResource Include="Resources\logo.png" />
+    <AvaloniaResource Include="Resources\picture.png" />
+    <AvaloniaResource Include="Resources\Products\2G3280.jpg" />
+    <AvaloniaResource Include="Resources\Products\3L7RCZ.jpg" />
+    <AvaloniaResource Include="Resources\Products\3XBOTN.jpeg" />
+    <AvaloniaResource Include="Resources\Products\BPV4MM.jpg" />
+    <AvaloniaResource Include="Resources\Products\F895RB.jpg" />
+    <AvaloniaResource Include="Resources\Products\JVL42J.jpg" />
+    <AvaloniaResource Include="Resources\Products\MIO8YV.jpg" />
+    <AvaloniaResource Include="Resources\Products\PMEZMH.jpg" />
+    <AvaloniaResource Include="Resources\Products\S72AM3.jpg" />
+    <AvaloniaResource Include="Resources\Products\UER2QD.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Avalonia" Version="$(AvaloniaVersion)" />
+    <PackageReference Include="Avalonia.Themes.Fluent" Version="$(AvaloniaVersion)" />
+    <PackageReference Include="Avalonia.Fonts.Inter" Version="$(AvaloniaVersion)" />
+    <PackageReference Include="Avalonia.ReactiveUI" Version="$(AvaloniaVersion)" />
+    <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
+    <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="$(AvaloniaVersion)" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.10" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.10">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="7.0.10" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="7.0.10" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.10">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7.0.4" />
+  </ItemGroup>
+</Project>

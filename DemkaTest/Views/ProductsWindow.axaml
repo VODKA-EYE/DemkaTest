@@ -1,0 +1,110 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="400"
+        x:Class="DemkaTest.ProductsWindow"
+		Icon="/Assets/icon.ico"
+        Title="ProductsWindow">
+<Grid ColumnDefinitions="72,*,*,auto,auto" RowDefinitions="72,auto,*">
+	<StackPanel
+		Grid.ColumnSpan="5"
+		Grid.Row="0"
+		Background="#ff76e383"/>
+	<Image
+		Grid.Row="0"
+		Grid.Column="0"
+		Source="../Resources/logo.png"/>
+	<TextBlock
+		Grid.Column="1"
+		Grid.Row="0"
+		VerticalAlignment="Center"
+		Text="ООО «Стройматериалы»"/>
+	<TextBox
+		Grid.Column="1"
+		Grid.Row="1"
+		MinWidth="96"
+		Watermark="Поиск"
+		Name="SearchTextBox"/>
+	<ComboBox
+		Grid.Column="2"
+		Grid.Row="1"
+		HorizontalAlignment="Center"
+		Name="ManufacturerComboBox"
+		SelectedIndex="0">
+		<ComboBox.ItemTemplate>
+			<DataTemplate>
+				<TextBlock Text="{Binding Path=Companyname}"/>
+			</DataTemplate>
+		</ComboBox.ItemTemplate>
+	</ComboBox>
+	<StackPanel
+		Grid.Column="3"
+		Grid.Row="1">
+		<TextBlock
+			FontSize="16"
+			Text="Добро пожаловать,"/>
+		<TextBlock
+			Name="UserNameTextBlock"
+			FontSize="16"/>
+	</StackPanel>
+	<Button
+		Name="LogOutButton"
+		Click="SearchBoxActivation"
+		Grid.Column="4"
+		Grid.Row="1">
+		<TextBlock
+			Text="Выйти"/>
+	</Button>
+	<ListBox
+		Grid.ColumnSpan="5"
+		Grid.Row="2"
+		ItemsSource="{Binding}"
+		Name="listBox">
+		<ListBox.ItemTemplate>
+			<DataTemplate>
+				<Border>
+					<Grid ColumnDefinitions="80,*,152">
+						<Image
+							Height="80"
+							Width="80"
+							Source="{Binding Path=Productphoto}"
+							/>
+						<StackPanel
+							Grid.Column="1"
+							Orientation="Vertical">
+							<TextBlock
+								Text="{Binding Path=Productname}"
+								TextWrapping="Wrap"/>
+							<TextBlock
+								Text="{Binding Path=Productdescription}"
+								TextWrapping="Wrap"/>
+							<StackPanel Orientation="Horizontal">
+								<TextBlock Text="Производитель: "/>
+								<TextBlock Text="{Binding Path=Productmanufacturer}"/>
+							</StackPanel>
+							<StackPanel
+								Orientation="Horizontal">
+								<TextBlock Text="Цена: "/>
+								<TextBlock Text="{Binding Path=Productcost}"/>
+								<TextBlock Text="руб."/>
+							</StackPanel>
+						</StackPanel>
+						<StackPanel
+							Grid.Column="2"
+							Orientation="Vertical"
+							VerticalAlignment="Center"
+							Margin="4">
+						<TextBlock
+							Text="Количество на складе:"
+							TextWrapping="Wrap"/>
+						<TextBlock
+							Text="{Binding Path=Productquantityinstock}"/>
+						</StackPanel>
+					</Grid>
+				</Border>
+			</DataTemplate>
+		</ListBox.ItemTemplate>
+	</ListBox>	
+</Grid>
+</Window>
