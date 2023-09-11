@@ -29,7 +29,7 @@
   
   <ItemGroup>
     <AvaloniaResource Include="Resources\logo.png" />
-    <AvaloniaResource Include="Resources\picture.png" />
+    <AvaloniaResource Include="Resources\Products\picture.png" />
     <AvaloniaResource Include="Resources\Products\2G3280.jpg" />
     <AvaloniaResource Include="Resources\Products\3L7RCZ.jpg" />
     <AvaloniaResource Include="Resources\Products\3XBOTN.jpeg" />

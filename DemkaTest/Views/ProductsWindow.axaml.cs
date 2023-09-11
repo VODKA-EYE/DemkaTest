@@ -79,8 +79,10 @@ public partial class ProductsWindow : Window
       x.Productdescription,
       x.Productmanufacturer,
       x.Productcost,
-      x.Productquantityinstock
+      x.Productquantityinstock,
+      Productphoto = "../Resources/picture.png"
     });
+    
   }
 
   private void LoadManufacturers()

@@ -13,7 +13,7 @@ public partial class Product
 
     public int Productcategory { get; set; }
 
-    public byte[] Productphoto { get; set; } = null!;
+    public string Productphoto { get; set; } = null!;
 
     public int Productmanufacturer { get; set; }
 
