@@ -13,18 +13,16 @@ namespace DemkaTest.Views;
 
 public partial class MainWindow : Window
 {
-  NeondbContext db;
   private bool failedCaptcha = false;
   private string captchaText;
   const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
   const string lines = @"/-|\ _~";
-  private static Random random = new Random();
-  DispatcherTimer timer = new DispatcherTimer();
+  private static Random random = new();
+  DispatcherTimer timer = new();
   public MainWindow()
   {
     InitializeComponent();
     CaptchaTextBox.IsVisible = false;
-    db = new NeondbContext();
   }
 
   public void Login(object sender, RoutedEventArgs e)
@@ -32,21 +30,21 @@ public partial class MainWindow : Window
     string login = LoginTextBlock.Text;
     string password = PasswordTextBlock.Text;
     User authUser = null;
-    using (NeondbContext db = new NeondbContext()) 
+    using (NeondbContext db = new()) 
     {
       authUser = db.Users.Where(b => b.Userlogin == login && b.Userpassword == password).FirstOrDefault();
     }
     if (authUser != null && failedCaptcha == false) 
     {
       string userName = authUser.Usersurname + " " + authUser.Username;
-      ProductsWindow products = new ProductsWindow(authUser.Userrole, userName);
+      ProductsWindow products = new(authUser.Userrole, userName);
       products.Show();
       this.Close();
     }
     else if(authUser != null && CaptchaTextBox.Text == captchaText)
     {
       string userName = authUser.Usersurname + " " + authUser.Username;
-      ProductsWindow products = new ProductsWindow(authUser.Userrole, userName);
+      ProductsWindow products = new(authUser.Userrole, userName);
       products.Show();
       this.Close();
     }
@@ -69,7 +67,7 @@ public partial class MainWindow : Window
 
   public void LoginAsGuest(object sender, RoutedEventArgs e)
   {
-    ProductsWindow products = new ProductsWindow(0,"Гость");
+    ProductsWindow products = new(0,"Гость");
     products.Show();
     this.Close();
   }

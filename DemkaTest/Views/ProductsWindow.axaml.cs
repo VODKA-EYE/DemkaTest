@@ -16,7 +16,14 @@ namespace DemkaTest;
 public partial class ProductsWindow : Window
 {
  
-  public ProductsWindow() { }
+  public ProductsWindow() 
+  {
+    UserNameTextBlock.Text = "Гость";
+    SearchTextBox.AddHandler(KeyUpEvent, SearchBoxOnTextInput, RoutingStrategies.Tunnel);
+    ManufacturerComboBox.SelectionChanged += ManufacturerComboboxSelectionChanged;
+    LoadProducts();
+    LoadManufacturers();
+  }
   public ProductsWindow(int userRole, string userName)
   {
     InitializeComponent();
@@ -43,19 +50,42 @@ public partial class ProductsWindow : Window
     {
       UserNameTextBlock.Text = userName;
     }
+    SearchTextBox.AddHandler(KeyUpEvent, SearchBoxOnTextInput, RoutingStrategies.Tunnel);
+    ManufacturerComboBox.SelectionChanged += ManufacturerComboboxSelectionChanged;
     LoadProducts();
     LoadManufacturers();
   }
 
   private void LoadProducts()
   {
-    var db = new NeondbContext().Products.ToList();
-    listBox.DataContext = db;
+    List<Product> products;
+    if (ManufacturerComboBox.SelectedIndex != 0)
+    {
+      products = Healper.Database.Products.Where(x => x.Productmanufacturer == ManufacturerComboBox.SelectedIndex).ToList();
+    }
+    else
+    {
+      products = Healper.Database.Products.ToList();
+    }
+    
+    string searchString = SearchTextBox.Text ?? "";
+    if(!string.IsNullOrEmpty(searchString))
+    {
+      products = products.Where(t => t.Productname.Contains(searchString) || t.Productdescription.Contains(searchString)).ToList();
+    }
+    listBox.ItemsSource = products.Select(x => new
+    {
+      x.Productname,
+      x.Productdescription,
+      x.Productmanufacturer,
+      x.Productcost,
+      x.Productquantityinstock
+    });
   }
 
   private void LoadManufacturers()
   {
-    var manufacturers = new NeondbContext().Companies.ToList();
+    List<Company> manufacturers = Healper.Database.Companies.ToList();
     manufacturers.Insert(0, new Company
     {
       Companyid = 0,
@@ -65,16 +95,20 @@ public partial class ProductsWindow : Window
     ManufacturerComboBox.SelectedIndex = 0;
   }
 
-  public void SearchBoxActivation(object sender, RoutedEventArgs e)
+  public void SearchBoxOnTextInput(object? sender, KeyEventArgs e)
   {
-    
-    if(SearchTextBox.Text.Length % 2 != 0)
-    {
-      SearchTextBox.Foreground = Brushes.DarkOliveGreen;
-    }
-    else
-    {
-      SearchTextBox.Foreground = Brushes.Olive;
-    }
+    LoadProducts();
   }
+
+  public void ManufacturerComboboxSelectionChanged(object sender, SelectionChangedEventArgs e)
+  {
+    LoadProducts();
+  }
+
+  public static class Healper
+  {
+    public static readonly NeondbContext Database = new();
+  }
+
+  
 }
