@@ -18,7 +18,7 @@ public partial class ProductsWindow : Window
  
   public ProductsWindow() 
   {
-    UserNameTextBlock.Text = "Гость";
+    UserNameTextBlock.Text = "Лаексик";
     SearchTextBox.AddHandler(KeyUpEvent, SearchBoxOnTextInput, RoutingStrategies.Tunnel);
     ManufacturerComboBox.SelectionChanged += ManufacturerComboboxSelectionChanged;
     LoadProducts();
@@ -89,7 +89,7 @@ public partial class ProductsWindow : Window
     manufacturers.Insert(0, new Company
     {
       Companyid = 0,
-      Companyname = "Все производители"
+      Companyname = "Все sus"
     });
     ManufacturerComboBox.ItemsSource = manufacturers;
     ManufacturerComboBox.SelectedIndex = 0;
