@@ -6,6 +6,7 @@ using Avalonia.Markup.Xaml;
 using Avalonia.Media;
 using DemkaTest.Context;
 using DemkaTest.Models;
+using DemkaTest.Views;
 using DynamicData;
 using Metsys.Bson;
 using System.Collections.Generic;
@@ -15,9 +16,11 @@ namespace DemkaTest;
 
 public partial class ProductsWindow : Window
 {
- 
+  int userRole;
+  string userName;
   public ProductsWindow() 
   {
+    InitializeComponent();
     UserNameTextBlock.Text = "Гость";
     SearchTextBox.AddHandler(KeyUpEvent, SearchBoxOnTextInput, RoutingStrategies.Tunnel);
     ManufacturerComboBox.SelectionChanged += ManufacturerComboboxSelectionChanged;
@@ -50,6 +53,8 @@ public partial class ProductsWindow : Window
     {
       UserNameTextBlock.Text = userName;
     }
+    this.userRole = userRole;
+    this.userName = userName;
     SearchTextBox.AddHandler(KeyUpEvent, SearchBoxOnTextInput, RoutingStrategies.Tunnel);
     ManufacturerComboBox.SelectionChanged += ManufacturerComboboxSelectionChanged;
     LoadProducts();
@@ -79,10 +84,10 @@ public partial class ProductsWindow : Window
       x.Productdescription,
       x.Productmanufacturer,
       x.Productcost,
-      x.Productquantityinstock,
-      Productphoto = "../Resources/picture.png"
+      x.Productquantityinstock
+      //Productphoto = "../Resources/picture.png"
     });
-    
+    ListedTextBlock.Text = products.Count().ToString() + "/" + Healper.Database.Products.Count().ToString();
   }
 
   private void LoadManufacturers()
@@ -112,5 +117,16 @@ public partial class ProductsWindow : Window
     public static readonly NeondbContext Database = new();
   }
 
-  
+  public void LogOut(object sender, RoutedEventArgs e)
+  {
+    MainWindow loginwindow = new();
+    loginwindow.Show();
+    this.Close();
+  }
+  public void OpenAddProductWindow(object sender, RoutedEventArgs e)
+  {
+    AddProductWindow addProductWindow = new(userRole,userName);
+    addProductWindow.Show();
+    this.Close();
+  }
 }

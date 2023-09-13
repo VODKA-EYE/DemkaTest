@@ -1,0 +1,97 @@
+<Window 
+  xmlns="https://github.com/avaloniaui"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+  mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
+  x:Class="DemkaTest.AddProductWindow"
+  Title="AddProductWindow"
+  MinWidth="480" MinHeight="600">
+  <Grid ColumnDefinitions="72,*,auto" RowDefinitions="72,*">
+    <!-- Верхняя плашка -->
+    <StackPanel
+      Grid.ColumnSpan="5"
+      Grid.Row="0"
+      Background="#ff76e383"/>
+    <Image
+      Grid.Row="0"
+      Grid.Column="0"
+      Source="../Resources/logo.png"/>
+    <TextBlock
+      Grid.Column="1"
+      Grid.ColumnSpan="2"
+      Grid.Row="0"
+      VerticalAlignment="Center"
+      Text="ООО «Стройматериалы»"/>
+    <Button
+			Name="LogOutButton"
+			Grid.Column="3"
+			Grid.Row="0"
+      Click="CloseThisWindow">
+      <TextBlock
+				Text="Отмена"/>
+    </Button>
+    <!-- Меню редактирования -->
+    <StackPanel
+      Grid.ColumnSpan="3"
+      Grid.Row="1"
+      HorizontalAlignment="Center"
+      VerticalAlignment="Center"
+      Orientation="Horizontal">
+      <StackPanel Orientation="Vertical">
+        <Image
+          Margin="4"
+          Height="200"
+          Width="300"
+          Source="../Resources/Products/picture.png"/>
+        <Button
+          Margin="4"
+          HorizontalAlignment="Center">
+          <TextBlock>
+            Добавить изображение
+          </TextBlock>
+        </Button>
+      </StackPanel>
+      <StackPanel Width="16"/>
+      <StackPanel Orientation="Vertical">
+        <TextBlock
+          Text="Артикул"/>
+        <TextBox
+          Name="ArticleNumberTextBox"
+          MaxLength="8"/>
+        <TextBlock
+          Text="Наименование"/>
+        <TextBox
+          Name="ProductNameTextBox"
+          MaxLength="64"/>
+        <TextBlock
+          Text="Производитель"/>
+        <ComboBox
+			    Name="ManufacturerComboBox"
+			    SelectedIndex="0"
+          >
+          <ComboBox.ItemTemplate>
+            <DataTemplate>
+              <TextBlock
+                Text="{Binding Path=Companyname}"
+                MinWidth="224"/>
+            </DataTemplate>
+          </ComboBox.ItemTemplate>
+        </ComboBox>
+        <TextBlock
+          Text="Стоимость"/>
+        <TextBox
+          Name="PriceTextBox"/>
+        <TextBlock
+          Text="Количество на складе"/>
+        <TextBox
+          Name="QuanityTextBox"/>
+        <TextBlock
+          Text="Описание"/>
+        <TextBox
+          Name="DescriptionTextBox"/>
+      </StackPanel>
+    </StackPanel>
+  </Grid>
+</Window>
+

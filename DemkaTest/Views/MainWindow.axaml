@@ -38,7 +38,8 @@
 				Text="Пароль:"/>
 			<TextBox
 				Name="PasswordTextBlock"
-				PasswordChar="*"/>
+				PasswordChar="*"
+        MaxLength="127"/>
 			<StackPanel Height="8"/>
 			<Grid
 				ColumnDefinitions="auto,auto,auto,auto">
