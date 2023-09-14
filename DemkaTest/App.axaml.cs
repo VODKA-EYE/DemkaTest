@@ -1,8 +1,6 @@
 ﻿using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
-
-using DemkaTest.ViewModels;
 using DemkaTest.Views;
 
 namespace DemkaTest;

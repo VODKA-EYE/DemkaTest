@@ -5,9 +5,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DemkaTest.Context;
 
+public static class Healper
+{
+  public static readonly NeondbContext Database = new();
+}
 public partial class NeondbContext : DbContext
 {
-    public NeondbContext()
+  
+  public NeondbContext()
     {
     }
 

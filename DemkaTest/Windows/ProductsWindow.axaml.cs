@@ -80,13 +80,15 @@ public partial class ProductsWindow : Window
     }
     listBox.ItemsSource = products.Select(x => new
     {
+      x.Productarticlenumber,
       x.Productname,
       x.Productdescription,
-      x.Productmanufacturer,
+      Manufacturer = x.ProductmanufacturerNavigation.Companyname,
       x.Productcost,
-      x.Productquantityinstock
-      //Productphoto = "../Resources/picture.png"
+      x.Productquantityinstock,
+      Productphoto = "/Resources/"+x.Productarticlenumber
     });
+
     ListedTextBlock.Text = products.Count().ToString() + "/" + Healper.Database.Products.Count().ToString();
   }
 
@@ -102,31 +104,34 @@ public partial class ProductsWindow : Window
     ManufacturerComboBox.SelectedIndex = 0;
   }
 
-  public void SearchBoxOnTextInput(object? sender, KeyEventArgs e)
+  private void SearchBoxOnTextInput(object? sender, KeyEventArgs e)
   {
     LoadProducts();
   }
 
-  public void ManufacturerComboboxSelectionChanged(object sender, SelectionChangedEventArgs e)
+  private void ManufacturerComboboxSelectionChanged(object sender, SelectionChangedEventArgs e)
   {
     LoadProducts();
   }
 
-  public static class Healper
-  {
-    public static readonly NeondbContext Database = new();
-  }
-
-  public void LogOut(object sender, RoutedEventArgs e)
+  private void LogOut(object sender, RoutedEventArgs e)
   {
     MainWindow loginwindow = new();
     loginwindow.Show();
     this.Close();
   }
-  public void OpenAddProductWindow(object sender, RoutedEventArgs e)
+  private async void OpenAddProductWindow(object sender, RoutedEventArgs e)
   {
-    AddProductWindow addProductWindow = new(userRole,userName);
-    addProductWindow.Show();
-    this.Close();
+    AddProductWindow addProductWindow = new();
+    await addProductWindow.ShowDialog(this);
+    LoadProducts();
+  }
+
+  private async void EditProductClick(object? sender, RoutedEventArgs e)
+  {
+    string button = (string)(sender as Button).Tag;
+    AddProductWindow addProductWindow = new(button);
+    await addProductWindow.ShowDialog(this);
+    LoadProducts();
   }
 }

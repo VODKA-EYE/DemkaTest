@@ -43,12 +43,28 @@
           Margin="4"
           Height="200"
           Width="300"
-          Source="../Resources/Products/picture.png"/>
+          Source="../Resources/picture.png"/>
         <Button
           Margin="4"
           HorizontalAlignment="Center">
           <TextBlock>
             Добавить изображение
+          </TextBlock>
+        </Button>
+        <Button
+          Margin="4"
+          HorizontalAlignment="Center">
+          <TextBlock>
+            Сбросить изображение
+          </TextBlock>
+        </Button>
+        <StackPanel Height="32"/>
+        <Button
+          Click="SaveNewProduct"
+          Margin="4"
+          HorizontalAlignment="Center">
+          <TextBlock>
+            Сохранить изменения
           </TextBlock>
         </Button>
       </StackPanel>
@@ -57,16 +73,19 @@
         <TextBlock
           Text="Артикул"/>
         <TextBox
+          Text="{Binding Path=Productarticlenumber}"
           Name="ArticleNumberTextBox"
           MaxLength="8"/>
         <TextBlock
           Text="Наименование"/>
         <TextBox
+          Text="{Binding Path=Productname}"
           Name="ProductNameTextBox"
           MaxLength="64"/>
         <TextBlock
           Text="Производитель"/>
         <ComboBox
+          DataContext="{Binding}"
 			    Name="ManufacturerComboBox"
 			    SelectedIndex="0"
           >
@@ -81,14 +100,20 @@
         <TextBlock
           Text="Стоимость"/>
         <TextBox
+          MaxLength="28"
+          Text="{Binding Path=Productcost}"
           Name="PriceTextBox"/>
         <TextBlock
           Text="Количество на складе"/>
         <TextBox
+          MaxLength="9"
+          Text="{Binding Path=Productquantityinstock}"
           Name="QuanityTextBox"/>
         <TextBlock
           Text="Описание"/>
         <TextBox
+          MaxLength="128"
+          Text="{Binding Path=Productdescription}"
           Name="DescriptionTextBox"/>
       </StackPanel>
     </StackPanel>

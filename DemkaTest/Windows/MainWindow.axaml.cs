@@ -4,7 +4,6 @@ using Avalonia.Interactivity;
 using Avalonia.Threading;
 using DemkaTest.Context;
 using DemkaTest.Models;
-using DemkaTest.ViewModels;
 using Microsoft.VisualBasic;
 using System;
 using System.Linq;
