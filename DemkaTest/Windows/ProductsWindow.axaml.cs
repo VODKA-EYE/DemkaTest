@@ -4,20 +4,22 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media;
+using Avalonia.Media.Imaging;
+using Castle.Components.DictionaryAdapter;
 using DemkaTest.Context;
 using DemkaTest.Models;
 using DemkaTest.Views;
 using DynamicData;
 using Metsys.Bson;
+using ReactiveUI;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 
 namespace DemkaTest;
 
 public partial class ProductsWindow : Window
 {
-  int userRole;
-  string userName;
   public ProductsWindow() 
   {
     InitializeComponent();
@@ -39,13 +41,13 @@ public partial class ProductsWindow : Window
         }
       case 1:
         {
-
+          
           break;
         }
 
       default:
         {
-
+          AddButton.IsEnabled = false;          
           break;
         }
     }
@@ -53,10 +55,9 @@ public partial class ProductsWindow : Window
     {
       UserNameTextBlock.Text = userName;
     }
-    this.userRole = userRole;
-    this.userName = userName;
     SearchTextBox.AddHandler(KeyUpEvent, SearchBoxOnTextInput, RoutingStrategies.Tunnel);
     ManufacturerComboBox.SelectionChanged += ManufacturerComboboxSelectionChanged;
+    listBox.SelectionChanged += EditProductClick;
     LoadProducts();
     LoadManufacturers();
   }
@@ -74,9 +75,10 @@ public partial class ProductsWindow : Window
     }
     
     string searchString = SearchTextBox.Text ?? "";
-    if(!string.IsNullOrEmpty(searchString))
+    searchString = searchString.ToLower();
+    if (!string.IsNullOrEmpty(searchString))
     {
-      products = products.Where(t => t.Productname.Contains(searchString) || t.Productdescription.Contains(searchString)).ToList();
+      products = products.Where(t => t.Productname.ToLower().Contains(searchString) || t.Productdescription.ToLower().Contains(searchString)).ToList();
     }
     listBox.ItemsSource = products.Select(x => new
     {
@@ -86,12 +88,24 @@ public partial class ProductsWindow : Window
       Manufacturer = x.ProductmanufacturerNavigation.Companyname,
       x.Productcost,
       x.Productquantityinstock,
-      Productphoto = "/Resources/"+x.Productarticlenumber
+      Productphoto = TryLoadImage(x.Productphoto)
     });
-
     ListedTextBlock.Text = products.Count().ToString() + "/" + Healper.Database.Products.Count().ToString();
   }
 
+  Bitmap TryLoadImage(string productphoto)
+  {
+    Bitmap link;
+    try
+    {
+      link = new(@"./Resources/" + productphoto);
+    }
+    catch
+    {
+      link = new(@"./Resources/picture.png");
+    }
+    return link;
+  }
   private void LoadManufacturers()
   {
     List<Company> manufacturers = Healper.Database.Companies.ToList();
@@ -127,11 +141,21 @@ public partial class ProductsWindow : Window
     LoadProducts();
   }
 
-  private async void EditProductClick(object? sender, RoutedEventArgs e)
+  private async void EditProductClick(object? sender, SelectionChangedEventArgs e)
   {
-    string button = (string)(sender as Button).Tag;
-    AddProductWindow addProductWindow = new(button);
-    await addProductWindow.ShowDialog(this);
-    LoadProducts();
+    var listboxObject = listBox.SelectedItem;
+    if (listboxObject != null)
+    {
+      System.Reflection.PropertyInfo pi = listboxObject.GetType().GetProperty("Productarticlenumber");
+      string article = (string)(pi.GetValue(listboxObject, null));
+      AddProductWindow addProductWindow = new(article);
+      await addProductWindow.ShowDialog(this);
+
+      addProductWindow.Closed += (o, arg) =>
+      {
+        LoadProducts();
+      };
+    }
+    listBox.UnselectAll();
   }
 }

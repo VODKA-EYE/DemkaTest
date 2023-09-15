@@ -3,10 +3,12 @@
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-  mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
+  mc:Ignorable="d" d:DesignWidth="700" d:DesignHeight="720"
   x:Class="DemkaTest.AddProductWindow"
+  Icon="/Assets/icon.ico"
   Title="AddProductWindow"
-  MinWidth="480" MinHeight="600">
+  Width="700" Height="720"
+  MinWidth="700" MinHeight="720">
   <Grid ColumnDefinitions="72,*,auto" RowDefinitions="72,*">
     <!-- Верхняя плашка -->
     <StackPanel
@@ -87,12 +89,44 @@
         <ComboBox
           DataContext="{Binding}"
 			    Name="ManufacturerComboBox"
-			    SelectedIndex="0"
-          >
+			    SelectedIndex="0">
           <ComboBox.ItemTemplate>
             <DataTemplate>
               <TextBlock
+                TextWrapping="Wrap"
                 Text="{Binding Path=Companyname}"
+                MinWidth="224"/>
+            </DataTemplate>
+          </ComboBox.ItemTemplate>
+        </ComboBox>
+        <TextBlock
+          Text="Поставщик"/>
+        <ComboBox
+          DataContext="{Binding}"
+			    Name="DelivelerComboBox"
+			    SelectedIndex="0">
+          <ComboBox.ItemTemplate>
+            <DataTemplate>
+              <TextBlock
+                TextWrapping="Wrap"
+                Text="{Binding Path=Companyname}"
+                MinWidth="224"/>
+            </DataTemplate>
+          </ComboBox.ItemTemplate>
+        </ComboBox>
+        <TextBlock
+          Text="Категория товара"/>
+        <ComboBox
+          DataContext="{Binding}"
+			    Name="ProductCategoryComboBox"
+			    SelectedIndex="0"
+          MinWidth="320"
+          MaxWidth="384">
+          <ComboBox.ItemTemplate>
+            <DataTemplate>
+              <TextBlock
+                TextWrapping="Wrap"
+                Text="{Binding Path=Productcategoryname}"
                 MinWidth="224"/>
             </DataTemplate>
           </ComboBox.ItemTemplate>
@@ -113,6 +147,9 @@
           Text="Описание"/>
         <TextBox
           MaxLength="128"
+          MinWidth="320"
+          MaxWidth="384"
+          TextWrapping="Wrap"
           Text="{Binding Path=Productdescription}"
           Name="DescriptionTextBox"/>
       </StackPanel>
