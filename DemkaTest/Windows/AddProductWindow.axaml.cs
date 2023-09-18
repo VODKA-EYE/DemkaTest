@@ -2,8 +2,10 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
+using Avalonia.Media.Imaging;
 using DemkaTest.Context;
 using DemkaTest.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -11,9 +13,7 @@ namespace DemkaTest;
 
 public partial class AddProductWindow : Window
 {
-  int manufacturerId;
   int productCategoryId;
-  int delivelerId;
   Product product;
   bool newProduct;
   public AddProductWindow()
@@ -29,44 +29,33 @@ public partial class AddProductWindow : Window
   {
     InitializeComponent();
     product = Healper.Database.Products.Find(id);
-    delivelerId = product.Productdeliveler;
-    manufacturerId = product.Productmanufacturer;
     productCategoryId = product.Productcategory;
     DataContext = product;
     LoadStuff();
+    ArticleNumberTextBox.IsReadOnly = true;
     newProduct = false;
   }
   private void LoadStuff()
   {
-    DelivelerComboBox.SelectionChanged += DelivelerComboboxSelectionChanged;
-    ManufacturerComboBox.SelectionChanged += ManufacturerComboboxSelectionChanged;
+    image.Source = TryLoadImage(product.Productphoto);
+    DelivelerTextBox.Text = product.ProductdelivelerNavigation.Companyname;
+    ManufacturerTextBox.Text = product.ProductmanufacturerNavigation.Companyname;
     ProductCategoryComboBox.SelectionChanged += ProductCategoryComboboxSelectionChanged;
-    LoadDelivelers();
-    LoadManufacturers();
     LoadProductCategories();
   }
 
-  private void LoadManufacturers()
+  Bitmap TryLoadImage(string productphoto)
   {
-    List<Company> manufacturers = Healper.Database.Companies.ToList();
-    manufacturers.Insert(0, new Company
+    Bitmap link;
+    try
     {
-      Companyid = 0,
-      Companyname = "Выберите производителя"
-    });
-    ManufacturerComboBox.ItemsSource = manufacturers;
-    ManufacturerComboBox.SelectedIndex = manufacturerId;
-  }
-  private void LoadDelivelers()
-  {
-    List<Company> deliveler = Healper.Database.Companies.ToList();
-    deliveler.Insert(0, new Company
+      link = new(@"./Resources/" + productphoto);
+    }
+    catch
     {
-      Companyid = 0,
-      Companyname = "Выберите поставщика"
-    });
-    DelivelerComboBox.ItemsSource = deliveler;
-    DelivelerComboBox.SelectedIndex = delivelerId;
+      link = new(@"./Resources/picture.png");
+    }
+    return link;
   }
 
   private void LoadProductCategories()
@@ -81,33 +70,40 @@ public partial class AddProductWindow : Window
     ProductCategoryComboBox.SelectedIndex = productCategoryId;
   }
   
-  private void ManufacturerComboboxSelectionChanged(object sender, SelectionChangedEventArgs e)
-  {
-    product.Productmanufacturer = ManufacturerComboBox.SelectedIndex;
-  }
-  private void DelivelerComboboxSelectionChanged(object sender, SelectionChangedEventArgs e)
-  {
-    product.Productdeliveler = DelivelerComboBox.SelectedIndex;
-  }
   private void ProductCategoryComboboxSelectionChanged(object sender, SelectionChangedEventArgs e)
   {
     product.Productcategory = ProductCategoryComboBox.SelectedIndex;
   }
   private void SaveNewProduct(object? sender, RoutedEventArgs e)
   {
-    if(DelivelerComboBox.SelectedIndex == 0 || ManufacturerComboBox.SelectedIndex == 0 || ProductCategoryComboBox.SelectedIndex == 0)
+    try
     {
-
-    }
-    else
-    {
-      product.Productphoto = product.Productarticlenumber + ".jpg";
-      if (newProduct)
+      if (DelivelerTextBox.Text == "" ||
+      ManufacturerTextBox.Text == "" ||
+      ArticleNumberTextBox.Text == "" ||
+      ProductCategoryComboBox.SelectedIndex == 0 ||
+      Double.Parse(PriceTextBox.Text) <= 0 ||
+      Int32.Parse(QuanityTextBox.Text) < 0|| 
+      Int32.Parse(DiscountTextBox.Text) < 0)
       {
-        Healper.Database.Add(product);
+        //Smth wrong
       }
-      Healper.Database.SaveChanges();
-      this.Close();
+      else
+      {
+        product.Productphoto = product.Productarticlenumber + ".jpg";
+        
+
+        if (newProduct)
+        {
+          Healper.Database.Add(product);
+        }
+        Healper.Database.SaveChanges();
+        this.Close();
+      }
+    }
+    catch
+    {
+      
     }
   }
   private void CloseThisWindow(object? sender, RoutedEventArgs e)

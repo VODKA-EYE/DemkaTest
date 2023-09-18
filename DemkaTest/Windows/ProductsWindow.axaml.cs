@@ -25,7 +25,7 @@ public partial class ProductsWindow : Window
     InitializeComponent();
     UserNameTextBlock.Text = "Гость";
     SearchTextBox.AddHandler(KeyUpEvent, SearchBoxOnTextInput, RoutingStrategies.Tunnel);
-    ManufacturerComboBox.SelectionChanged += ManufacturerComboboxSelectionChanged;
+    ManufacturerComboBox.SelectionChanged += ComboboxSelectionChanged;
     LoadProducts();
     LoadManufacturers();
   }
@@ -56,7 +56,8 @@ public partial class ProductsWindow : Window
       UserNameTextBlock.Text = userName;
     }
     SearchTextBox.AddHandler(KeyUpEvent, SearchBoxOnTextInput, RoutingStrategies.Tunnel);
-    ManufacturerComboBox.SelectionChanged += ManufacturerComboboxSelectionChanged;
+    ManufacturerComboBox.SelectionChanged += ComboboxSelectionChanged;
+    SortByPriceComboBox.SelectionChanged += ComboboxSelectionChanged;
     listBox.SelectionChanged += EditProductClick;
     LoadProducts();
     LoadManufacturers();
@@ -74,6 +75,15 @@ public partial class ProductsWindow : Window
       products = Healper.Database.Products.ToList();
     }
     
+    if(SortByPriceComboBox.SelectedIndex == 0) 
+    { 
+      products = products.OrderBy(x => x.Productcost).ToList();
+    }
+    else
+    {
+      products = products.OrderByDescending(x => x.Productcost).ToList();
+    }
+
     string searchString = SearchTextBox.Text ?? "";
     searchString = searchString.ToLower();
     if (!string.IsNullOrEmpty(searchString))
@@ -86,7 +96,7 @@ public partial class ProductsWindow : Window
       x.Productname,
       x.Productdescription,
       Manufacturer = x.ProductmanufacturerNavigation.Companyname,
-      x.Productcost,
+      Productcost = x.Productcost - (x.Productdiscountamount * x.Productcost)/100,
       x.Productquantityinstock,
       Productphoto = TryLoadImage(x.Productphoto)
     });
@@ -123,7 +133,7 @@ public partial class ProductsWindow : Window
     LoadProducts();
   }
 
-  private void ManufacturerComboboxSelectionChanged(object sender, SelectionChangedEventArgs e)
+  private void ComboboxSelectionChanged(object sender, SelectionChangedEventArgs e)
   {
     LoadProducts();
   }
@@ -141,7 +151,7 @@ public partial class ProductsWindow : Window
     LoadProducts();
   }
 
-  private async void EditProductClick(object? sender, SelectionChangedEventArgs e)
+  private void EditProductClick(object? sender, SelectionChangedEventArgs e)
   {
     var listboxObject = listBox.SelectedItem;
     if (listboxObject != null)
@@ -149,8 +159,7 @@ public partial class ProductsWindow : Window
       System.Reflection.PropertyInfo pi = listboxObject.GetType().GetProperty("Productarticlenumber");
       string article = (string)(pi.GetValue(listboxObject, null));
       AddProductWindow addProductWindow = new(article);
-      await addProductWindow.ShowDialog(this);
-
+      addProductWindow.ShowDialog(this);
       addProductWindow.Closed += (o, arg) =>
       {
         LoadProducts();

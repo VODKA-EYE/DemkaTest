@@ -3,16 +3,16 @@
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-  mc:Ignorable="d" d:DesignWidth="700" d:DesignHeight="720"
+  mc:Ignorable="d" d:DesignWidth="700" d:DesignHeight="900"
   x:Class="DemkaTest.AddProductWindow"
   Icon="/Assets/icon.ico"
   Title="AddProductWindow"
-  Width="700" Height="720"
+  Width="700" Height="900"
   MinWidth="700" MinHeight="720">
-  <Grid ColumnDefinitions="72,*,auto" RowDefinitions="72,*">
+  <Grid ColumnDefinitions="72,*,auto" RowDefinitions="72,auto">
     <!-- Верхняя плашка -->
     <StackPanel
-      Grid.ColumnSpan="5"
+      Grid.ColumnSpan="3"
       Grid.Row="0"
       Background="#ff76e383"/>
     <Image
@@ -42,10 +42,10 @@
       Orientation="Horizontal">
       <StackPanel Orientation="Vertical">
         <Image
+          Name="image"
           Margin="4"
           Height="200"
-          Width="300"
-          Source="../Resources/picture.png"/>
+          Width="300"/>
         <Button
           Margin="4"
           HorizontalAlignment="Center">
@@ -81,39 +81,23 @@
         <TextBlock
           Text="Наименование"/>
         <TextBox
+          MaxWidth="384"
+          TextWrapping="Wrap"
           Text="{Binding Path=Productname}"
           Name="ProductNameTextBox"
           MaxLength="64"/>
         <TextBlock
           Text="Производитель"/>
-        <ComboBox
-          DataContext="{Binding}"
-			    Name="ManufacturerComboBox"
-			    SelectedIndex="0">
-          <ComboBox.ItemTemplate>
-            <DataTemplate>
-              <TextBlock
-                TextWrapping="Wrap"
-                Text="{Binding Path=Companyname}"
-                MinWidth="224"/>
-            </DataTemplate>
-          </ComboBox.ItemTemplate>
-        </ComboBox>
+        <TextBox
+          Name="ManufacturerTextBox"
+          TextWrapping="Wrap"
+          MinWidth="224"/>
         <TextBlock
           Text="Поставщик"/>
-        <ComboBox
-          DataContext="{Binding}"
-			    Name="DelivelerComboBox"
-			    SelectedIndex="0">
-          <ComboBox.ItemTemplate>
-            <DataTemplate>
-              <TextBlock
-                TextWrapping="Wrap"
-                Text="{Binding Path=Companyname}"
-                MinWidth="224"/>
-            </DataTemplate>
-          </ComboBox.ItemTemplate>
-        </ComboBox>
+        <TextBox
+          Name="DelivelerTextBox"
+          TextWrapping="Wrap"
+          MinWidth="224"/>
         <TextBlock
           Text="Категория товара"/>
         <ComboBox
@@ -138,6 +122,12 @@
           Text="{Binding Path=Productcost}"
           Name="PriceTextBox"/>
         <TextBlock
+         Text="Скидка"/>
+        <TextBox
+          MaxLength="28"
+          Text="{Binding Path=Productdiscountamount}"
+          Name="DiscountTextBox"/>
+        <TextBlock
           Text="Количество на складе"/>
         <TextBox
           MaxLength="9"
@@ -146,7 +136,7 @@
         <TextBlock
           Text="Описание"/>
         <TextBox
-          MaxLength="128"
+          MaxLength="256"
           MinWidth="320"
           MaxWidth="384"
           TextWrapping="Wrap"
