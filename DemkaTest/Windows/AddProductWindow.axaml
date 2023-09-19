@@ -10,7 +10,9 @@
   Width="700" Height="900"
   MinWidth="700" MinHeight="720">
   <Grid ColumnDefinitions="72,*,auto" RowDefinitions="72,auto">
+    
     <!-- Верхняя плашка -->
+    
     <StackPanel
       Grid.ColumnSpan="3"
       Grid.Row="0"
@@ -33,7 +35,9 @@
       <TextBlock
 				Text="Отмена"/>
     </Button>
-    <!-- Меню редактирования -->
+    
+    <!-- Изображение -->
+    
     <StackPanel
       Grid.ColumnSpan="3"
       Grid.Row="1"
@@ -48,19 +52,22 @@
           Width="300"/>
         <Button
           Margin="4"
-          HorizontalAlignment="Center">
+          HorizontalAlignment="Center"
+          Click="SelectImage">
           <TextBlock>
             Добавить изображение
           </TextBlock>
         </Button>
         <Button
           Margin="4"
-          HorizontalAlignment="Center">
+          HorizontalAlignment="Center"
+          Click="DropImage">
           <TextBlock>
             Сбросить изображение
           </TextBlock>
         </Button>
         <StackPanel Height="32"/>
+        
         <Button
           Click="SaveNewProduct"
           Margin="4"
@@ -76,6 +83,9 @@
         </TextBlock>
       </StackPanel>
       <StackPanel Width="16"/>
+      
+      <!-- Параметры -->
+      
       <StackPanel Orientation="Vertical">
         <TextBlock
           Text="Артикул"/>

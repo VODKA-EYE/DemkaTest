@@ -3,10 +3,12 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media.Imaging;
+using Avalonia.Platform.Storage;
 using DemkaTest.Context;
 using DemkaTest.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace DemkaTest;
@@ -16,6 +18,7 @@ public partial class AddProductWindow : Window
   int productCategoryId;
   Product product;
   bool newProduct;
+  string url;
   public AddProductWindow()
   {
     InitializeComponent();
@@ -57,7 +60,43 @@ public partial class AddProductWindow : Window
     }
     return link;
   }
+  Bitmap TryLoadSelectedImage(string url)
+  {
+    Bitmap link;
+    try
+    {
+      link = new(url);
+      this.url = url;
+    }
+    catch
+    {
+      link = new(@"./Resources/picture.png");
+      this.url = @"./Resources/picture.png";
+    }
+    return link;
+  }
 
+  private async void SelectImage(object sender, RoutedEventArgs e)
+  {
+    var file = await StorageProvider.OpenFilePickerAsync(new Avalonia.Platform.Storage.FilePickerOpenOptions
+    {
+      Title = "Загрузить картинку",
+      AllowMultiple = false,
+      FileTypeFilter = new FilePickerFileType[]{new("Элементы"){Patterns = new[]{"*.png", "*.jpg", "*.jpeg", "*.bmp"}}}
+    });
+    if(file.Count >= 1)
+    {
+      await using var stream = await file[0].OpenReadAsync();
+      using var streamReader = new StreamReader(stream);
+      string url = (streamReader.BaseStream as FileStream).Name;
+      image.Source = TryLoadSelectedImage(url);
+    }
+  }
+  private void DropImage(object sender, RoutedEventArgs e)
+  {
+    image.Source = TryLoadSelectedImage(@"./Resources/picture.png");
+  }
+  
   private void LoadProductCategories()
   {
     List<ProductCategory> category = Healper.Database.ProductCategories.ToList();
@@ -87,12 +126,20 @@ public partial class AddProductWindow : Window
       Int32.Parse(DiscountTextBox.Text) < 0 ||
       Int32.Parse(DiscountTextBox.Text) > 100)
       {
-        ErrorTextBlock.Text = "Что-то вызывает ошибку";
+        ErrorTextBlock.Text = "Ошибочные значения";
       }
       else
       {
-        product.Productphoto = product.Productarticlenumber + ".jpg";
-
+        if(url != @"./Resources/picture.png")
+        {
+          File.Copy(url, @$"./Resources/{product.Productarticlenumber}.jpg", true);
+          product.Productphoto = product.Productarticlenumber + ".jpg";
+        }
+        else
+        {
+          File.Delete(@$"./Resources/{product.Productarticlenumber}.jpg");
+          product.Productphoto = "";
+        }
         Company manufacturerId = Healper.Database.Companies.Where(x => x.Companyname == ManufacturerTextBox.Text).FirstOrDefault();
         Company delivelerId = Healper.Database.Companies.Where(x => x.Companyname == DelivelerTextBox.Text).FirstOrDefault();
 
@@ -113,6 +160,7 @@ public partial class AddProductWindow : Window
           {
             manufacturer.Companyname = ManufacturerTextBox.Text;
             Healper.Database.Add(manufacturer);
+            Healper.Database.SaveChanges();
           }
           else
           {
@@ -134,6 +182,7 @@ public partial class AddProductWindow : Window
           Company company = new();
           company.Companyname = ManufacturerTextBox.Text;
           Healper.Database.Add(company);
+          Healper.Database.SaveChanges();
           product.Productmanufacturer = Healper.Database.Companies.Where(x => x.Companyname == ManufacturerTextBox.Text).Select(x => x.Companyid).FirstOrDefault();
         }
 
@@ -144,6 +193,7 @@ public partial class AddProductWindow : Window
           Company company = new();
           company.Companyname = DelivelerTextBox.Text;
           Healper.Database.Add(company);
+          Healper.Database.SaveChanges();
           product.Productdeliveler = Healper.Database.Companies.Where(x => x.Companyname == DelivelerTextBox.Text).Select(x => x.Companyid).FirstOrDefault();
         }
 
@@ -157,7 +207,7 @@ public partial class AddProductWindow : Window
     }
     catch
     {
-      
+      ErrorTextBlock.Text = "Что-то вызывает ошибку";
     }
   }
   private void CloseThisWindow(object? sender, RoutedEventArgs e)
