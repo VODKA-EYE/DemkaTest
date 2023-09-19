@@ -69,6 +69,11 @@
             Сохранить изменения
           </TextBlock>
         </Button>
+        <TextBlock
+          Margin="4"
+          Name="ErrorTextBlock"
+          TextWrapping="Wrap">
+        </TextBlock>
       </StackPanel>
       <StackPanel Width="16"/>
       <StackPanel Orientation="Vertical">

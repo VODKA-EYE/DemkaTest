@@ -32,14 +32,14 @@ public partial class AddProductWindow : Window
     productCategoryId = product.Productcategory;
     DataContext = product;
     LoadStuff();
+    DelivelerTextBox.Text = product.ProductdelivelerNavigation.Companyname;
+    ManufacturerTextBox.Text = product.ProductmanufacturerNavigation.Companyname;
     ArticleNumberTextBox.IsReadOnly = true;
     newProduct = false;
   }
   private void LoadStuff()
   {
     image.Source = TryLoadImage(product.Productphoto);
-    DelivelerTextBox.Text = product.ProductdelivelerNavigation.Companyname;
-    ManufacturerTextBox.Text = product.ProductmanufacturerNavigation.Companyname;
     ProductCategoryComboBox.SelectionChanged += ProductCategoryComboboxSelectionChanged;
     LoadProductCategories();
   }
@@ -84,21 +84,75 @@ public partial class AddProductWindow : Window
       ProductCategoryComboBox.SelectedIndex == 0 ||
       Double.Parse(PriceTextBox.Text) <= 0 ||
       Int32.Parse(QuanityTextBox.Text) < 0|| 
-      Int32.Parse(DiscountTextBox.Text) < 0)
+      Int32.Parse(DiscountTextBox.Text) < 0 ||
+      Int32.Parse(DiscountTextBox.Text) > 100)
       {
-        //Smth wrong
+        ErrorTextBlock.Text = "Что-то вызывает ошибку";
       }
       else
       {
         product.Productphoto = product.Productarticlenumber + ".jpg";
-        
+
+        Company manufacturerId = Healper.Database.Companies.Where(x => x.Companyname == ManufacturerTextBox.Text).FirstOrDefault();
+        Company delivelerId = Healper.Database.Companies.Where(x => x.Companyname == DelivelerTextBox.Text).FirstOrDefault();
+
+        // Оба найдены
+
+        if (manufacturerId != null && delivelerId != null)
+        {
+          product.Productmanufacturer = manufacturerId.Companyid;
+          product.Productdeliveler = delivelerId.Companyid;
+        }
+
+        // Оба не найдены
+
+        else if (manufacturerId == null && delivelerId == null)
+        {
+          Company manufacturer = new(), deliveler  = new();
+          if(ManufacturerTextBox.Text == DelivelerTextBox.Text)
+          {
+            manufacturer.Companyname = ManufacturerTextBox.Text;
+            Healper.Database.Add(manufacturer);
+          }
+          else
+          {
+            manufacturer.Companyname = ManufacturerTextBox.Text;
+            deliveler.Companyname = DelivelerTextBox.Text;
+            Healper.Database.Add(manufacturer);
+            Healper.Database.Add(deliveler);
+            Healper.Database.SaveChanges();
+          }
+          
+          product.Productmanufacturer = Healper.Database.Companies.Where(x => x.Companyname == ManufacturerTextBox.Text).Select(x => x.Companyid).FirstOrDefault();
+          product.Productdeliveler = Healper.Database.Companies.Where(x => x.Companyname == DelivelerTextBox.Text).Select(x => x.Companyid).FirstOrDefault();
+        }
+
+        // Производитель не найден
+
+        else if (manufacturerId == null && delivelerId != null)
+        {
+          Company company = new();
+          company.Companyname = ManufacturerTextBox.Text;
+          Healper.Database.Add(company);
+          product.Productmanufacturer = Healper.Database.Companies.Where(x => x.Companyname == ManufacturerTextBox.Text).Select(x => x.Companyid).FirstOrDefault();
+        }
+
+        // Доставщик не найден
+
+        else if (manufacturerId != null && delivelerId == null)
+        {
+          Company company = new();
+          company.Companyname = DelivelerTextBox.Text;
+          Healper.Database.Add(company);
+          product.Productdeliveler = Healper.Database.Companies.Where(x => x.Companyname == DelivelerTextBox.Text).Select(x => x.Companyid).FirstOrDefault();
+        }
 
         if (newProduct)
         {
           Healper.Database.Add(product);
         }
         Healper.Database.SaveChanges();
-        this.Close();
+        Close();
       }
     }
     catch

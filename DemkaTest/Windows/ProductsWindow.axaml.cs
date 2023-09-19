@@ -23,9 +23,10 @@ public partial class ProductsWindow : Window
   public ProductsWindow() 
   {
     InitializeComponent();
-    UserNameTextBlock.Text = "Гость";
+    UserNameTextBlock.Text = "TESTING";
     SearchTextBox.AddHandler(KeyUpEvent, SearchBoxOnTextInput, RoutingStrategies.Tunnel);
     ManufacturerComboBox.SelectionChanged += ComboboxSelectionChanged;
+    SortByPriceComboBox.SelectionChanged += ComboboxSelectionChanged;
     LoadProducts();
     LoadManufacturers();
   }
@@ -37,16 +38,19 @@ public partial class ProductsWindow : Window
       case 0:
         {
           UserNameTextBlock.Text = "Гость";
+          AddButton.IsVisible = false;
+          AddButton.IsEnabled = false;
           break;
         }
       case 1:
         {
-          
+          listBox.SelectionChanged += EditProductClick;
           break;
         }
 
       default:
         {
+          AddButton.IsVisible = false;
           AddButton.IsEnabled = false;          
           break;
         }
@@ -58,7 +62,6 @@ public partial class ProductsWindow : Window
     SearchTextBox.AddHandler(KeyUpEvent, SearchBoxOnTextInput, RoutingStrategies.Tunnel);
     ManufacturerComboBox.SelectionChanged += ComboboxSelectionChanged;
     SortByPriceComboBox.SelectionChanged += ComboboxSelectionChanged;
-    listBox.SelectionChanged += EditProductClick;
     LoadProducts();
     LoadManufacturers();
   }
