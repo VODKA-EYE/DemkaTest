@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace DemkaTest;
 
@@ -24,7 +25,7 @@ public partial class AddProductWindow : Window
     InitializeComponent();
     product = new();
     DataContext = product;
-    LoadStuff();
+    LoadProductCategories();
     newProduct = true;
   }
 
@@ -34,17 +35,13 @@ public partial class AddProductWindow : Window
     product = Healper.Database.Products.Find(id);
     productCategoryId = product.Productcategory;
     DataContext = product;
-    LoadStuff();
+    image.Source = TryLoadImage(product.Productphoto);
+    ProductCategoryComboBox.SelectionChanged += ProductCategoryComboboxSelectionChanged;
+    LoadProductCategories();
     DelivelerTextBox.Text = product.ProductdelivelerNavigation.Companyname;
     ManufacturerTextBox.Text = product.ProductmanufacturerNavigation.Companyname;
     ArticleNumberTextBox.IsReadOnly = true;
     newProduct = false;
-  }
-  private void LoadStuff()
-  {
-    image.Source = TryLoadImage(product.Productphoto);
-    ProductCategoryComboBox.SelectionChanged += ProductCategoryComboboxSelectionChanged;
-    LoadProductCategories();
   }
 
   Bitmap TryLoadImage(string productphoto)
@@ -140,8 +137,8 @@ public partial class AddProductWindow : Window
           File.Delete(@$"./Resources/{product.Productarticlenumber}.jpg");
           product.Productphoto = "";
         }
-        Company manufacturerId = Healper.Database.Companies.Where(x => x.Companyname == ManufacturerTextBox.Text).FirstOrDefault();
-        Company delivelerId = Healper.Database.Companies.Where(x => x.Companyname == DelivelerTextBox.Text).FirstOrDefault();
+        Company manufacturerId = Healper.Database.Companies.Where(x => x.Companyname.ToLower() == ManufacturerTextBox.Text.ToLower()).FirstOrDefault();
+        Company delivelerId = Healper.Database.Companies.Where(x => x.Companyname.ToLower() == DelivelerTextBox.Text.ToLower()).FirstOrDefault();
 
         // Оба найдены
 

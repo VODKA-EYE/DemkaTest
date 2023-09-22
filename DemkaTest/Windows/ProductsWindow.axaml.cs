@@ -69,6 +69,8 @@ public partial class ProductsWindow : Window
   private void LoadProducts()
   {
     List<Product> products;
+
+    // Выбор производителя
     if (ManufacturerComboBox.SelectedIndex != 0)
     {
       products = Healper.Database.Products.Where(x => x.Productmanufacturer == ManufacturerComboBox.SelectedIndex).ToList();
@@ -78,6 +80,7 @@ public partial class ProductsWindow : Window
       products = Healper.Database.Products.ToList();
     }
     
+    // Сортировка по цене
     if(SortByPriceComboBox.SelectedIndex == 0) 
     { 
       products = products.OrderBy(x => x.Productcost).ToList();
@@ -87,19 +90,33 @@ public partial class ProductsWindow : Window
       products = products.OrderByDescending(x => x.Productcost).ToList();
     }
 
+    // Работа поисковой строки
     string searchString = SearchTextBox.Text ?? "";
     searchString = searchString.ToLower();
+    string[] searchStringElements = searchString.Split(' ');
     if (!string.IsNullOrEmpty(searchString))
     {
-      products = products.Where(t => t.Productname.ToLower().Contains(searchString) || t.Productdescription.ToLower().Contains(searchString)).ToList();
+      foreach(string element in searchStringElements)
+      {
+        products = products.Where(
+          t => t.Productname.ToLower().Contains(element) || 
+          t.Productdescription.ToLower().Contains(element) ||
+          t.ProductmanufacturerNavigation.Companyname.ToLower().Contains(element) ||
+          t.ProductcategoryNavigation.Productcategoryname.ToLower().Contains(element) ||
+          t.Productcost.ToString().Contains(element) ||
+          t.Productquantityinstock.ToString().Contains(element)
+          ).ToList();
+      }
     }
+
+    // Отображение данных в листе
     listBox.ItemsSource = products.Select(x => new
     {
       x.Productarticlenumber,
       x.Productname,
       x.Productdescription,
       Manufacturer = x.ProductmanufacturerNavigation.Companyname,
-      Productcost = x.Productcost - (x.Productdiscountamount * x.Productcost)/100,
+      Productcost = x.Productcost - (x.Productdiscountamount * x.Productcost) / 100,
       x.Productquantityinstock,
       Productphoto = TryLoadImage(x.Productphoto)
     });
