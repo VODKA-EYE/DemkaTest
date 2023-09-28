@@ -12,6 +12,7 @@ using DemkaTest.Views;
 using DynamicData;
 using Metsys.Bson;
 using ReactiveUI;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -20,7 +21,7 @@ namespace DemkaTest;
 
 public partial class ProductsWindow : Window
 {
-  public ProductsWindow() 
+  public ProductsWindow()
   {
     InitializeComponent();
     UserNameTextBlock.Text = "TESTING";
@@ -51,7 +52,7 @@ public partial class ProductsWindow : Window
       default:
         {
           AddButton.IsVisible = false;
-          AddButton.IsEnabled = false;          
+          AddButton.IsEnabled = false;
           break;
         }
     }
@@ -79,10 +80,10 @@ public partial class ProductsWindow : Window
     {
       products = Healper.Database.Products.ToList();
     }
-    
+
     // Сортировка по цене
-    if(SortByPriceComboBox.SelectedIndex == 0) 
-    { 
+    if (SortByPriceComboBox.SelectedIndex == 0)
+    {
       products = products.OrderBy(x => x.Productcost).ToList();
     }
     else
@@ -96,10 +97,10 @@ public partial class ProductsWindow : Window
     string[] searchStringElements = searchString.Split(' ');
     if (!string.IsNullOrEmpty(searchString))
     {
-      foreach(string element in searchStringElements)
+      foreach (string element in searchStringElements)
       {
         products = products.Where(
-          t => t.Productname.ToLower().Contains(element) || 
+          t => t.Productname.ToLower().Contains(element) ||
           t.Productdescription.ToLower().Contains(element) ||
           t.ProductmanufacturerNavigation.Companyname.ToLower().Contains(element) ||
           t.ProductcategoryNavigation.Productcategoryname.ToLower().Contains(element) ||
@@ -118,8 +119,8 @@ public partial class ProductsWindow : Window
       Manufacturer = x.ProductmanufacturerNavigation.Companyname,
       Productcost = x.Productcost - (x.Productdiscountamount * x.Productcost) / 100,
       x.Productquantityinstock,
-      Productphoto = TryLoadImage(x.Productphoto)
-    });
+      Productphoto = TryLoadImage(x.Productphoto),
+    }).ToList();
     ListedTextBlock.Text = products.Count().ToString() + "/" + Healper.Database.Products.Count().ToString();
   }
 
