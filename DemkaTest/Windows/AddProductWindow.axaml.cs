@@ -147,20 +147,24 @@ public partial class AddProductWindow : Window
       }
       else
       {
-        if (url != @"./Resources/picture.png" && url != null)
-        {
-          // сохранить фото в БД и в папку
-          File.Copy(url, @$"./Resources/{product.Productarticlenumber + imageFormat}", true);
-          product.Productphoto = product.Productarticlenumber + imageFormat;
-        }
-        else if (url == @"./Resources/picture.png")
+        if (product.Productphoto == @"./Resources/picture.png" || url == @"./Resources/picture.png")
         {
           File.Delete(@$"./Resources/{product.Productarticlenumber + imageFormat}");
           product.Productphoto = "";
         }
+        else if (product.Productphoto != @"./Resources/picture.png" || url != @"./Resources/picture.png")
+        {
+          // сохранить фото в БД и в папку
+          if(product.Productphoto == "")
+          {
+            File.Copy(url, @$"./Resources/{product.Productarticlenumber + imageFormat}", true);
+            product.Productphoto = product.Productarticlenumber + imageFormat;
+          }
+          
+        }
         else
         {
-          
+          product.Productphoto = "";
         }
         Company manufacturerId = Healper.Database.Companies.Where(x => x.Companyname.ToLower() == ManufacturerTextBox.Text.ToLower()).FirstOrDefault();
         Company delivelerId = Healper.Database.Companies.Where(x => x.Companyname.ToLower() == DelivelerTextBox.Text.ToLower()).FirstOrDefault();

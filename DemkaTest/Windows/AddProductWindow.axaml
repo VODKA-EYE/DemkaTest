@@ -103,13 +103,17 @@
           MaxLength="64"/>
         <TextBlock
           Text="Производитель"/>
-        <TextBox
+				<TextBox
+					MaxLength="64"
+					MaxWidth="384"
           Name="ManufacturerTextBox"
           TextWrapping="Wrap"
           MinWidth="224"/>
         <TextBlock
           Text="Поставщик"/>
-        <TextBox
+				<TextBox
+					MaxLength="64"
+					MaxWidth="384"
           Name="DelivelerTextBox"
           TextWrapping="Wrap"
           MinWidth="224"/>
@@ -139,7 +143,7 @@
         <TextBlock
          Text="Скидка"/>
         <TextBox
-          MaxLength="28"
+          MaxLength="2"
           Text="{Binding Path=Productdiscountamount}"
           Name="DiscountTextBox"/>
         <TextBlock
