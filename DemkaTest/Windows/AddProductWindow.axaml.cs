@@ -20,6 +20,7 @@ public partial class AddProductWindow : Window
   Product product;
   bool newProduct;
   string url;
+  string imageFormat;
   public AddProductWindow()
   {
     InitializeComponent();
@@ -44,31 +45,24 @@ public partial class AddProductWindow : Window
     newProduct = false;
   }
 
+  // Для изначального отображения картинки
   Bitmap TryLoadImage(string productphoto)
   {
     Bitmap link;
     try
     {
-      link = new(@"./Resources/" + productphoto);
+      try
+      {
+        link = new(@"./Resources/" + productphoto);
+      }
+      catch
+      {
+        link = new(@"./Resources/picture.png");
+      }
     }
     catch
     {
-      link = new(@"./Resources/picture.png");
-    }
-    return link;
-  }
-  Bitmap TryLoadSelectedImage(string url)
-  {
-    Bitmap link;
-    try
-    {
-      link = new(url);
-      this.url = url;
-    }
-    catch
-    {
-      link = new(@"./Resources/picture.png");
-      this.url = @"./Resources/picture.png";
+      link = null;
     }
     return link;
   }
@@ -93,7 +87,33 @@ public partial class AddProductWindow : Window
   {
     image.Source = TryLoadSelectedImage(@"./Resources/picture.png");
   }
-  
+
+  // Отобразить выбранную картинку
+  Bitmap TryLoadSelectedImage(string url)
+  {
+    Bitmap link;
+    try
+    {
+      try
+      {
+        link = new(url);
+        this.url = url;
+        imageFormat = Path.GetExtension(url);
+      }
+      catch
+      {
+        link = new(@"./Resources/picture.png");
+        this.url = @"./Resources/picture.png";
+      }
+    }
+    catch
+    {
+      link = null;
+      this.url = null;
+    }
+    return link;
+  }
+
   private void LoadProductCategories()
   {
     List<ProductCategory> category = Healper.Database.ProductCategories.ToList();
@@ -123,19 +143,24 @@ public partial class AddProductWindow : Window
       Int32.Parse(DiscountTextBox.Text) < 0 ||
       Int32.Parse(DiscountTextBox.Text) > 100)
       {
-        ErrorTextBlock.Text = "Ошибочные значения";
+        ErrorTextBlock.Text = "Не корректные значения в полях";
       }
       else
       {
-        if(url != @"./Resources/picture.png")
+        if (url != @"./Resources/picture.png" && url != null)
         {
-          File.Copy(url, @$"./Resources/{product.Productarticlenumber}.jpg", true);
-          product.Productphoto = product.Productarticlenumber + ".jpg";
+          // сохранить фото в БД и в папку
+          File.Copy(url, @$"./Resources/{product.Productarticlenumber + imageFormat}", true);
+          product.Productphoto = product.Productarticlenumber + imageFormat;
+        }
+        else if (url == @"./Resources/picture.png")
+        {
+          File.Delete(@$"./Resources/{product.Productarticlenumber + imageFormat}");
+          product.Productphoto = "";
         }
         else
         {
-          File.Delete(@$"./Resources/{product.Productarticlenumber}.jpg");
-          product.Productphoto = "";
+          
         }
         Company manufacturerId = Healper.Database.Companies.Where(x => x.Companyname.ToLower() == ManufacturerTextBox.Text.ToLower()).FirstOrDefault();
         Company delivelerId = Healper.Database.Companies.Where(x => x.Companyname.ToLower() == DelivelerTextBox.Text.ToLower()).FirstOrDefault();
@@ -204,7 +229,7 @@ public partial class AddProductWindow : Window
     }
     catch
     {
-      ErrorTextBlock.Text = "Что-то вызывает ошибку";
+      ErrorTextBlock.Text = "Ошибка при сохранении данных";
     }
   }
   private void CloseThisWindow(object? sender, RoutedEventArgs e)

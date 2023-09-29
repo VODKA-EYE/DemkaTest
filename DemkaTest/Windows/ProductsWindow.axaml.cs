@@ -5,6 +5,7 @@ using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
+using Avalonia.Threading;
 using Castle.Components.DictionaryAdapter;
 using DemkaTest.Context;
 using DemkaTest.Models;
@@ -21,6 +22,8 @@ namespace DemkaTest;
 
 public partial class ProductsWindow : Window
 {
+  DispatcherTimer timer = new();
+  // Для отображении в дизайнере
   public ProductsWindow()
   {
     InitializeComponent();
@@ -31,6 +34,8 @@ public partial class ProductsWindow : Window
     LoadProducts();
     LoadManufacturers();
   }
+
+  // Рабочее окно
   public ProductsWindow(int userRole, string userName)
   {
     InitializeComponent();
@@ -45,24 +50,28 @@ public partial class ProductsWindow : Window
         }
       case 1:
         {
+          UserNameTextBlock.Text = userName;
           listBox.SelectionChanged += EditProductClick;
           break;
         }
 
       default:
         {
+          UserNameTextBlock.Text = userName;
           AddButton.IsVisible = false;
           AddButton.IsEnabled = false;
           break;
         }
     }
-    if (UserNameTextBlock.Text != "Гость")
-    {
-      UserNameTextBlock.Text = userName;
-    }
+
+    // Присвоение поисковому полю и дропдаун меню фунционал
+
     SearchTextBox.AddHandler(KeyUpEvent, SearchBoxOnTextInput, RoutingStrategies.Tunnel);
     ManufacturerComboBox.SelectionChanged += ComboboxSelectionChanged;
     SortByPriceComboBox.SelectionChanged += ComboboxSelectionChanged;
+
+    // Загрузить всё
+
     LoadProducts();
     LoadManufacturers();
   }
@@ -91,7 +100,7 @@ public partial class ProductsWindow : Window
       products = products.OrderByDescending(x => x.Productcost).ToList();
     }
 
-    // Работа поисковой строки
+    // Работа поисковой строки по всем параметрам
     string searchString = SearchTextBox.Text ?? "";
     searchString = searchString.ToLower();
     string[] searchStringElements = searchString.Split(' ');
@@ -129,11 +138,18 @@ public partial class ProductsWindow : Window
     Bitmap link;
     try
     {
-      link = new(@"./Resources/" + productphoto);
+      try
+      {
+        link = new(@"./Resources/" + productphoto);
+      }
+      catch
+      {
+        link = new(@"./Resources/picture.png");
+      }
     }
     catch
-    {
-      link = new(@"./Resources/picture.png");
+    { 
+      link = null; 
     }
     return link;
   }
@@ -149,10 +165,21 @@ public partial class ProductsWindow : Window
     ManufacturerComboBox.SelectedIndex = 0;
   }
 
-  private void SearchBoxOnTextInput(object? sender, KeyEventArgs e)
+  private async void SearchBoxOnTextInput(object? sender, KeyEventArgs e)
   {
     LoadProducts();
+    //timer.Interval = TimeSpan.FromMilliseconds(500);
+    //timer.Tick += TimerTick;
+    //timer.Start();
   }
+
+  // С таймером работает медленее
+
+  //public void TimerTick(object sender, EventArgs e)
+  //{
+  //  LoadProducts();
+  //  timer.Stop();
+  //}
 
   private void ComboboxSelectionChanged(object sender, SelectionChangedEventArgs e)
   {

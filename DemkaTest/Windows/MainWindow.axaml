@@ -32,7 +32,6 @@
 				Text="Логин:"/>
 			<TextBox
 				Name="LoginTextBlock"
-        Text="123"
 				/>
 			<StackPanel Height="8"/>
 			<TextBlock
@@ -40,8 +39,7 @@
 			<TextBox
 				Name="PasswordTextBlock"
 				PasswordChar="*"
-        MaxLength="127"
-        Text="123"/>
+        MaxLength="127"/>
 			<StackPanel Height="8"/>
 			<Grid
 				ColumnDefinitions="auto,auto,auto,auto">

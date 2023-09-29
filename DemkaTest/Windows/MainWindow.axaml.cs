@@ -26,28 +26,34 @@ public partial class MainWindow : Window
 
   public void Login(object sender, RoutedEventArgs e)
   {
-    string login = LoginTextBlock.Text;
-    string password = PasswordTextBlock.Text;
-    User authUser = null;
-    using (NeondbContext db = new()) 
+    if(captchaText == CaptchaTextBox.Text && failedCaptcha) 
     {
-      authUser = db.Users.Where(b => b.Userlogin == login && b.Userpassword == password).FirstOrDefault();
+      failedCaptcha = false;
     }
-    if (authUser != null && failedCaptcha == false) 
+
+    if(!failedCaptcha) 
     {
-      string userName = authUser.Usersurname + " " + authUser.Username;
-      ProductsWindow products = new(authUser.Userrole, userName);
-      products.Show();
-      this.Close();
+      string login = LoginTextBlock.Text;
+      string password = PasswordTextBlock.Text;
+      User authUser = null;
+      using (NeondbContext db = new())
+      {
+        authUser = db.Users.Where(b => b.Userlogin == login && b.Userpassword == password).FirstOrDefault();
+      }
+      if (authUser != null)
+      {
+        string userName = authUser.Usersurname + " " + authUser.Username;
+        ProductsWindow products = new(authUser.Userrole, userName);
+        products.Show();
+        this.Close();
+      }
+      else
+      {
+        failedCaptcha = true;
+        GenerateCaptcha();
+      }
     }
-    else if(authUser != null && CaptchaTextBox.Text == captchaText)
-    {
-      string userName = authUser.Usersurname + " " + authUser.Username;
-      ProductsWindow products = new(authUser.Userrole, userName);
-      products.Show();
-      this.Close();
-    }
-    else if(failedCaptcha)
+    else
     {
       timer.Interval = TimeSpan.FromSeconds(10);
       timer.Tick += TimerTick;
@@ -57,11 +63,7 @@ public partial class MainWindow : Window
       CaptchaTextBox.IsEnabled = false;
       PasswordTextBlock.IsEnabled = false;
     }
-    else
-    {
-      failedCaptcha = true;
-      GenerateCaptcha();
-    }
+
   }
 
   public void LoginAsGuest(object sender, RoutedEventArgs e)
